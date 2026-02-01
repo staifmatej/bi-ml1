@@ -1,1 +1,1 @@
-Omlouvám se všem za chaos v pojmenovávání obrázků. Vymýšlet názvy obrázků není moje silná stránka.
+**Poznámka:** Omlouvám se všem za chaos v pojmenovávání obrázků. Vymýšlet názvy obrázků není moje silná stránka :)
