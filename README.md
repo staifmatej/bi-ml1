@@ -1,7 +1,7 @@
 # My notes for last exam
 
 ## Abstract
-This document [my_ml1_notes_staifmatej.pdf](my_ml1_notes_staifmatej.pdf) is a collection of notes in Czech language for preparation for the exam from the subject Machine Learning 1 (BI-ML1) at CTU FIT (winter semester 2025/26). The text is a synthesis of information presented at lectures, but I created it independently by myself. I declare that the text itself was not generated using LLM. If you find any errors please use issues or contact in the header of the document.
+This document [my_ml1_notes_staifmatej.pdf](my_ml1_notes_staifmatej.pdf) is a collection of notes in Czech language for preparation for the exam from the subject Machine Learning 1 (BI-ML1) at CTU FIT (winter semester 2025/26). The text is a synthesis of information presented at lectures, but I created it independently by myself. **I declare that the text itself was not generated using LLM**. If you find any errors please use issues or contact in the header of the document.
 
 ## Notice
 - Each section marks and highlights under the heading which oral exam question the chapter belongs to! This way I processed all questions for oral exam.
