@@ -171,7 +171,7 @@ Hierarchické shlukování (angl. Hierarchical Clustering), k-Means, DBSCAN (Den
 \item $\det(\mathbf{A}) = 0$
 \item Sloupce (resp. řádky) $\mathbf{A}$ jsou lineárně závislé
 \item Hodnost $\text{rank}(\mathbf{A}) < n$
-\item Existuje nenulový vektor $\mathbf{v} \neq \mathbf{0}$ takový, že $\mathbf{A}\mathbf{v} = \mathbf{0}$
+\item Existuje nenulový vektor $\mathbf{v} \neq \theta$ takový, že $\mathbf{A}\mathbf{v} = \theta$
 \end{itemize}
 \end{itemize}
 
@@ -281,10 +281,6 @@ Algoritmus ID3, kritéria pro větvení (entropie, gini, MSE), použití pro kla
 
 \begin{itemize}
 
-\item Neparametrický model -- počet parametrů (uzlů stromu) není 
-fixní a závisí na datech. Strom si pamatuje pouze pravidla větvení 
-a predikce v~listech, ne samotná trénovací data.
-
 \item Výhody:
 \begin{itemize}
 \item Nenáročnost na  přípravu dat.
@@ -329,7 +325,7 @@ a predikce v~listech, ne samotná trénovací data.
 \begin{itemize}
 \item {\bf Vstup}: Máme $N$ řádkovou tabulku s hodnotami pro binární proměnnou a $p$ binárních příznaků (angl. features) $X_1, X_2, \dots, X_p$.
 
-\item {\bf 1. krok:} Spočítáme informační zisk pro každý příznak a vybereme (resp. sloupec), kde je informační zisk největší.
+\item {\bf 1. krok:} Spočítáme informační zisk pro každý příznak (resp. sloupec) a vybereme, kde je informační zisk největší.
 
 \item {\bf 2. krok:} Vytvoříme uzel stromu. Jelikož jsou naše příznaky binární, strom se v tomto uzlu rozdělí na dvě větve (splní/nesplní podmínku).
 
@@ -424,7 +420,7 @@ Váhy podmnožin: $t_1 = \frac{3}{6} = \frac{1}{2}$, $t_0 = \frac{3}{6} = \frac{
 
 Entropie podmnožin:
 \begin{itemize}
-\item Pro $\mathcal{D}_1$: $p_1 = 0$, $p_0 = 1$ $\Rightarrow$ $H(\mathcal{D}_1) = -0 \cdot \log_2 0 - 1 \cdot \log_2 1 = 0$ bit (konvence: $0 \cdot \log_2 0 = 0$)
+\item Pro $\mathcal{D}_1$: $p_1 = 0$, $p_0 = 1$ $\Rightarrow$ $H(\mathcal{D}_1) = -0 \cdot \log_2 0 - 1 \cdot \log_2 1 = 0$ bit 
 \item Pro $\mathcal{D}_0$: $p_1 = 1$, $p_0 = 0$ $\Rightarrow$ $H(\mathcal{D}_0) = -1 \cdot \log_2 1 - 0 \cdot \log_2 0 = 0$ bit
 \end{itemize}
 
@@ -799,7 +795,7 @@ Model lineární regrese, predikce, maticový zápis trénovací množiny. Metod
 
 \item V modelu lineární regrese {\bf předpokládáme lineární závislost vysvětlované proměnné na hodnotách příznaků}, tedy: $$Y = w_0 + w_1 x_1 + w_2 x_2 + ... + w_p x_p + \varepsilon, \ p \in \N$$
 
-kde $w_i, \ i \in \{0, 1,2,...p\}$ jsou nějaké neznámé koeficienty, které hledáme. $\varepsilon$ je náhodná veličina s $E(\varepsilon) = 0$. Koeficient $w_0$ se nazývá {\bf intercept} a odpovídá (očekávané) výchozí hodnotě $Y$ při nulových příznacích.
+kde $w_i, \ i \in \{0, 1,2,...p\}$ jsou nějaké neznámé koeficienty, které hledáme. $\varepsilon$ je náhodná veličina s $\mathbb{E}(\varepsilon) = 0$. Koeficient $w_0$ se nazývá {\bf intercept} a odpovídá (očekávané) výchozí hodnotě $Y$ při nulových příznacích.
 
 Pokud si označíme vektor příznaků jako $\mathbf{x} = (1, x_1, ... ,x_p)^T$ a vektor váh jako $\mathbf{w} = (w_0, w_1,...w_p)^T$, potom můžeme zapisovat kompaktněji:
 
@@ -826,11 +822,12 @@ kde $N$ reprezentuje počet řádků v datasetu. Minimalizací tohoto výrazu z�
 
 
 Toto chceme minimalizovat. Výraz si proto vhodně upravíme:
-
 \begin{align*}
 RSS(\mathbf{w}) &= \sum_{i = 1}^N (Y_i - \mathbf{w}^T \mathbf{x}_i)^2 \\
 &= (\mathbf{Y} - \mathbf{X} \mathbf{w})^T(\mathbf{Y} - \mathbf{X} \mathbf{w}) \\
-&= \mathbf{Y}^T\mathbf{Y} - 2\mathbf{Y}^T\mathbf{X}\mathbf{w} + \mathbf{w}^T\mathbf{X}^T\mathbf{X}\mathbf{w}
+&= (\mathbf{Y}^T - \mathbf{w}^T\mathbf{X}^T)(\mathbf{Y} - \mathbf{X}\mathbf{w}) \\
+&= \mathbf{Y}^T\mathbf{Y} - \underbrace{\mathbf{Y}^T\mathbf{X}\mathbf{w}}_\text{skalár} - \underbrace{\mathbf{w}^T\mathbf{X}^T\mathbf{Y}}_\text{skalár} + \mathbf{w}^T\mathbf{X}^T\mathbf{X}\mathbf{w} \\
+&= \mathbf{Y}^T\mathbf{Y} - \underbrace{2\mathbf{Y}^T\mathbf{X}\mathbf{w}}_\text{skalár} + \mathbf{w}^T\mathbf{X}^T\mathbf{X}\mathbf{w}
 \end{align*}
 
 Hledáme minimum, proto sestrojíme {\bf gradient} $RSS(\mathbf{w})$:
@@ -839,6 +836,11 @@ Hledáme minimum, proto sestrojíme {\bf gradient} $RSS(\mathbf{w})$:
 \nabla RSS(\mathbf{w}) = \frac{\partial RSS(\mathbf{w})}{\partial \mathbf{w}} &= \frac{\partial}{\partial \mathbf{w}} (\mathbf{Y}^T\mathbf{Y} - 2\mathbf{Y}^T\mathbf{X}\mathbf{w} + \mathbf{w}^T\mathbf{X}^T\mathbf{X}\mathbf{w}) \\
 &= - 2\mathbf{X}^T\mathbf{Y} + 2\mathbf{X}^T\mathbf{X}\mathbf{w} 
 \end{align*}
+
+{\bf Pozn. k derivaci druhého členu:} Člen $-2\mathbf{Y}^T\mathbf{X}\mathbf{w}$ je skalár, proto platí $\mathbf{Y}^T\mathbf{X}\mathbf{w} = (\mathbf{Y}^T\mathbf{X}\mathbf{w})^T = \mathbf{w}^T\mathbf{X}^T\mathbf{Y}$. Derivace lineárního členu $\mathbf{w}^T\mathbf{c}$ podle $\mathbf{w}$ je $\mathbf{c}$, tedy $\frac{\partial}{\partial \mathbf{w}}(-2\mathbf{w}^T\mathbf{X}^T\mathbf{Y}) = -2\mathbf{X}^T\mathbf{Y}$.
+
+{\bf Pozn. k derivace třetího členu:} Toto platí $\frac{\partial}{\partial \mathbf{w}}(\mathbf{w}^T\mathbf{X}^T\mathbf{X}\mathbf{w}) = 2\mathbf{X}^T\mathbf{X}\mathbf{w}$, neboť $\mathbf{X}^T\mathbf{X}$ je symetrická matice. Pro symetrickou matici $\mathbf{A}$ a libovolný vektor $\mathbf{w}$ obecně platí následující: 
+$\frac{\partial}{\partial \mathbf{w}}(\mathbf{w}^T\mathbf{A}\mathbf{w}) = 2\mathbf{A}\mathbf{w}$.
 
 Potom {\bf Hessova matice} (angl. Hessian Matrix) $RSS(\mathbf{w})$ je:
 
@@ -858,8 +860,8 @@ Nyní musíme z definice dokázat, že Hessova matice je \textbf{pozitivně defi
 
 $$\mathbf{v}^T(2\mathbf{X}^T\mathbf{X})\mathbf{v} = 2 \mathbf{v}^T(\mathbf{X}^T\mathbf{X})\mathbf{v}= 2 (\mathbf{X}\mathbf{v})^T(\mathbf{X}\mathbf{v})= 2||\mathbf{X}\mathbf{v}||^2 > 0$$
 
-Z lineární nezávislosti sloupců $\mathbf{X}$ plyne, že pro $(\forall \mathbf{v} \neq \mathbf{0})(\mathbf{X}\mathbf{v} \neq \mathbf{0})$, a tedy:
-$$2\|\mathbf{X} \mathbf{v}\|^2 > 0 \quad \text{pro} \ \forall \mathbf{v} \neq \mathbf{0}$$
+Z lineární nezávislosti sloupců $\mathbf{X}$ plyne, že pro $(\forall \mathbf{v} \neq \theta)(\mathbf{X}\mathbf{v} \neq \theta)$, a tedy:
+$$2\|\mathbf{X} \mathbf{v}\|^2 > 0 \quad \text{pro} \ \forall \mathbf{v} \neq \theta$$
 
 Hessova matice je tedy pozitivně definitní, což znamená, že řešení normální rovnice $\hat{\mathbf{w}}$ je bodem ostrého lokálního minima.
 
@@ -884,19 +886,21 @@ nazýváme \textbf{řešením normální rovnice}.
 
 \item {\bf SVD rozklad} (angl. Singular Value Decomposition) každé matice $\mathbf{X} \in \mathbb{R}^{N \times (p+1)}$ má tvar:
 $$\mathbf{X} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$$
-kde $\mathbf{U} \in \mathbb{R}^{N \times N}$ a $\mathbf{V} \in \mathbb{R}^{(p+1) \times (p+1)}$ jsou ortogonální matice ($\mathbf{U}^T\mathbf{U} = I$, $\mathbf{V}^T\mathbf{V} = I$) a $\boldsymbol{\Sigma} \in \mathbb{R}^{N \times (p+1)}$ je diagonální matice se singulárními hodnotami $\sigma_1 \geq \sigma_2 \geq ... \geq \sigma_{p+1} \geq 0$ na diagonále.
+kde $\mathbf{U} \in \mathbb{R}^{N \times N}$ a $\mathbf{V} \in \mathbb{R}^{(p+1) \times (p+1)}$ jsou ortogonální matice ($\mathbf{U}^T\mathbf{U} = \mathbf{I}$, $\mathbf{V}^T\mathbf{V} = \mathbf{I}$) a $\boldsymbol{\Sigma} \in \mathbb{R}^{N \times (p+1)}$ je diagonální matice se singulárními hodnotami $\sigma_1 \geq \sigma_2 \geq ... \geq \sigma_{p+1} \geq 0$ na diagonále.
 
 \item $\hat{\mathbf{w}}$ lze proto stabilněji a univerzálněji spočítat pomocí SVD. Dosadíme-li $\mathbf{X} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$ do řešení normální rovnice:
+
 \begin{align*}
 \hat{\mathbf{w}} &= (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y} \\
 &= ((\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T)^T(\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T))^{-1}(\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T)^T\mathbf{Y} \\
 &= (\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T)^{-1}\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \\
 &= (\mathbf{V}\boldsymbol{\Sigma}^T\boldsymbol{\Sigma}\mathbf{V}^T)^{-1}\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \quad \text{(využili jsme $\mathbf{U}^T\mathbf{U} = I$)} \\
-&= \mathbf{V}(\boldsymbol{\Sigma}^T\boldsymbol{\Sigma})^{-1}\mathbf{V}^T\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \\
+&= \mathbf{V}(\boldsymbol{\Sigma}^T\boldsymbol{\Sigma})^{-1}\mathbf{V}^T\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \quad \text{(využili jsme $\mathbf{V}^T = \mathbf{V}^{-1}$)} \\
 &= \mathbf{V}(\boldsymbol{\Sigma}^T\boldsymbol{\Sigma})^{-1}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \quad \text{(využili jsme $\mathbf{V}^T\mathbf{V} = I$)} \\
 &= \mathbf{V}\boldsymbol{\Sigma}^+\mathbf{U}^T\mathbf{Y}
 \end{align*}
 kde $\boldsymbol{\Sigma}^+ = (\boldsymbol{\Sigma}^T\boldsymbol{\Sigma})^{-1}\boldsymbol{\Sigma}^T$ je {\bf Moorova-Penroseova pseudoinverze} (angl. Moore-Penrose pseudoinverse) matice $\boldsymbol{\Sigma}$.
+\end{itemize}
 
 \item {\bf Implementace v praxi:} Knihovna \texttt{scikit-learn} (\texttt{LinearRegression()}) používá pro výpočet $\hat{\mathbf{w}}$ numericky stabilní SVD rozklad prostřednictvím funkce \texttt{dgelsd} z knihovny LAPACK, což zajišťuje korektní řešení i pro singulární matice.
 
@@ -910,7 +914,7 @@ kde $\boldsymbol{\Sigma}^+ = (\boldsymbol{\Sigma}^T\boldsymbol{\Sigma})^{-1}\bol
 \text{Obrázek 2: Vizualizace modelu lineární regrese}
 \end{center}
 
-\item Na obrázku 2: {\bf modré body} jsou trénovací data $(x_i, Y_i)$, {\bf červené body} jsou predikce $\hat{Y}_i$, {\bf modré křížky} jsou střední hodnoty $(x_i, E(Y_i))$, {\bf modrá čerchovaná čára} je skutečná přímka $y = \mathbf{w}^T \mathbf{x}$ (neznámá), a {\bf červená čára} je naše odhadnutá přímka $\hat{y} = \hat{\mathbf{w}}^T \mathbf{x}$. Nejlepší odhad by byl, kdyby se červená přímka dostala na modrou čerchovanou čáru.
+\item Na obrázku 2: {\bf modré body} jsou trénovací data $(x_i, Y_i)$, {\bf červené body} jsou predikce $\hat{Y}_i$, {\bf modré křížky} jsou střední hodnoty $(x_i, \mathbb{E}(Y_i))$, {\bf modrá čerchovaná čára} je skutečná přímka $y = \mathbf{w}^T \mathbf{x}$ (neznámá), a {\bf červená čára} je naše odhadnutá přímka $\hat{y} = \hat{\mathbf{w}}^T \mathbf{x}$. Nejlepší odhad by byl, kdyby se červená přímka dostala na modrou čerchovanou čáru.
 \end{itemize}
 
 \subsection{Závěrečné poznámky}
@@ -955,7 +959,7 @@ Tabulka~\ref{tab:colinearity_comparison} ukazuje srovnání a problémy při kol
 
 \item Možné řešení kolinearity u lineární regrese:
 \begin{enumerate}
-    \item Přigenerovat další data či odebrat existující (nemusí pomoci).
+    \item Přigenerovat další data či odebrat existující.
     \item Snížit počet příznaků (feature selection, PCA) — chceme snížením počtu příznaků odebrat příznaky, které jsou (téměř) lineárně závislé.
     \item Použití Ridge, Lasso či Elastic Net regrese, které mají regularizační členy, jež problém kolinearity většinou odstraní nebo dostatečně zmírní.
 \end{enumerate}
@@ -1112,7 +1116,7 @@ $$\mathbf{X}^T = \begin{pmatrix}
 
 \subsubsection{Krok 4: Výpočet inverzní matice $(\mathbf{X}^T\mathbf{X})^{-1}$}
 
-Pro výpočet inverze matice $\mathbf{X}^T\mathbf{X}$ použijeme Gauss-Jordanovu eliminaci na rozšířené matici $(\mathbf{X}^T\mathbf{X} \mid \mathbf{E})$:
+Pro výpočet inverze matice $\mathbf{X}^T\mathbf{X}$ použijeme Gauss-Jordanovu eliminaci na rozšířené matici $(\mathbf{X}^T\mathbf{X} \mid \mathbf{I})$:
 
 $$
 \renewcommand{\arraystretch}{1.4} % Zvětší mezery mezi řádky v matici pro lepší čitelnost zlomků
@@ -1309,9 +1313,9 @@ $$\mathbf{X}^T\mathbf{Y} - \mathbf{X}^T\mathbf{X}\mathbf{w} - \lambda \mathbf{I}
 &= 2(\mathbf{X}^T\mathbf{X} + \lambda \mathbf{I}').
 \end{align*}
 
-\item $\forall \mathbf{v} \in \mathbb{R}^{p+1}$, $\mathbf{v} \neq \mathbf{0}$ a $\lambda > 0$ platí
+\item $\forall \mathbf{v} \in \mathbb{R}^{p+1}$, $\mathbf{v} \neq \theta$ a $\lambda > 0$ platí
 $$\mathbf{v}^T(\mathbf{X}^T\mathbf{X} + \lambda \mathbf{I}')\mathbf{v} = (\mathbf{X}\mathbf{v})^T(\mathbf{X}\mathbf{v}) + \lambda \mathbf{v}^T \mathbf{I}' \mathbf{v} = \|\mathbf{X}\mathbf{v}\|^2 + \lambda \sum_{i=1}^{p} v_i^2 > 0,$$
-protože pro $\mathbf{v} = (v_0, 0, \dots, 0)^T \neq \mathbf{0}$ platí $\mathbf{X}\mathbf{v} = (v_0, \dots, v_0)^T \neq \mathbf{0}$.
+protože pro $\mathbf{v} = (v_0, 0, \dots, 0)^T \neq \theta$ platí $\mathbf{X}\mathbf{v} = (v_0, \dots, v_0)^T \neq \theta$.
 
 \item Hessova matice je tedy pozitivně definitní a matice $\mathbf{X}^T\mathbf{X} + \lambda \mathbf{I}'$ je vždy regulární pro $\lambda > 0$.
 
@@ -1342,7 +1346,7 @@ $$Y = \sum_{j=0}^{M} w_j \varphi_j(\mathbf{x}) + \varepsilon = \varphi(\mathbf{x
 
 \item Další postup je analogický jako předtím.
 
-\item Predikce: $\hat{Y} = \varphi(\mathbf{x})^T \hat{\mathbf{w}}_\lambda$.
+\item Predikce: $\hat{Y} = \varphi(\mathbf{x})^T \hat{\mathbf{w}}$.
 
 \item {\bf Příklady bázových funkcí:}
 \begin{itemize}
@@ -1352,8 +1356,16 @@ $$Y = \sum_{j=0}^{M} w_j \varphi_j(\mathbf{x}) + \varepsilon = \varphi(\mathbf{x
 \item $\varphi(\mathbf{x}) = \mathbf{1}_{(a,b)}(x_i)$, kde $\mathbf{1}_A(\mathbf{x}) = 1$ pokud $\mathbf{x} \in A$ a $0$ jinak — indikátory množin.
 \item $\varphi(\mathbf{x}) = h(\|\mathbf{x} - \mathbf{x}_i\|)$, kde $\mathbf{x}_i$ je $i$-tý trénovací bod a $h$ je nějaká funkce — tzv. radiální bázové funkce centrované v bodech trénovací množiny.
 \end{itemize}
+\end{itemize}
+
+
+\subsection{Zajímavá videa na YouTube}
+
+\begin{itemize}
+\item \href{https://youtu.be/Q81RR3yKn30?si=iRJRqO4delNlPQrP}{Regularization Part 1: Ridge (L2) Regression (StatQuest with Josh Starmer)} \hfill \textbf{[20~min]}
 
 \end{itemize}
+
 
 \section{Statistické vlastnosti modelů}
 \label{sec:stat_vlastnosti}
@@ -1380,7 +1392,7 @@ Označíme-li $\text{var}\,Y = \text{var}\,\varepsilon = \sigma^2$, dostáváme
 \[
 \mathbb{E}L(Y, \hat{Y}) = \sigma^2 + \mathbb{E}(\hat{Y} - \mathbb{E}Y)^2.
 \]
-\item První člen odpovídá \textbf{neodstranitelné chybě}, která je dána náhodností v modelu. Tato chyba se nazývá Bayesovská (angl. \textbf{Bayes error}). Druhý člen se značí $\text{MSE}(\hat{Y})$ a nazývá \textbf{střední kvadratická chyba odhadu} $\hat{Y}$ parametru $\mathbb{E}Y$ (angl. \textbf{mean squared error}).
+\item První člen odpovídá \textbf{neodstranitelné chybě}, která je dána náhodností v modelu. Tato chyba se nazývá Bayesovská (angl. \textbf{Bayes error}). Druhý člen se značí $\text{MSE}(\hat{Y})$ a nazývá \textbf{střední kvadratická chyba odhadu} $\hat{Y}$ parametru $\mathbb{E}Y$
 
 
 \item Pro $MSE(\hat{Y})$ dále platí
@@ -1392,7 +1404,7 @@ Označíme-li $\text{var}\,Y = \text{var}\,\varepsilon = \sigma^2$, dostáváme
 &= (\mathbb{E}\hat{Y} - \mathbb{E}Y)^2 + \text{var}\,\hat{Y} = (\text{bias}\,\hat{Y})^2 + \text{var}\,\hat{Y}
 \end{align*}
 
-kde bias $\hat{Y} = \mathbb{E}Yˆ − \mathbb{E}Y$ značí \textbf{vychýlení odhadu} (angl. \textbf{bias}).
+kde bias $\hat{Y} = \mathbb{E}\hat{Y} - \mathbb{E}Y$ značí \textbf{vychýlení odhadu} (angl. \textbf{bias}).
 
 \item Dohromady tedy máme finální dekompozici očekávané chyby jako
 \[
@@ -1453,6 +1465,19 @@ a $\hat{Y}$ je tedy nestranným odhadem $\mathbb{E}Y$.
 \]
 tj. vychýlení je 0.
 \end{itemize}
+
+
+\subsection{Zajímavá videa na YouTube}
+
+\begin{itemize}
+
+\item \href{https://youtu.be/EuBBz3bI-aA?si=2hTRAyObYfLWdG2R}{Machine Learning Fundamentals: Bias and Variance (StatQuest with Josh Starmer)} \hfill \textbf{[6~min]}
+
+\item \href{https://youtu.be/pvcEQfcO3pk?si=8oFJOnXPviM1zdAF}{Statistical Learning: 2.3 Model Selection and Bias Variance Tradeoff
+ (Stanford Online)} \hfill \textbf{[10~min]}
+
+\end{itemize}
+
 
 \section{Logistická regrese}
 \label{sec:logisticka_regrese}
@@ -1609,6 +1634,12 @@ Logistická regrese selže! hranice je nelineární.
 Logistická regrese opět selže! Protože nelze najít lineární hranici, která by třídy oddělila. Na toto potřebujeme nelineární model (např. neural network)
 
 Problém 1 (XOR) nebo Problém 2 (kruh) \textbf{lze vyřešit i logistickou regresí, pokud provedeme transformaci příznaků}. Např. přidáním příznaku $x_1^2 + x_2^2$ (pro kruh) nebo $x_1 \cdot x_2$ (pro XOR)
+\end{itemize}
+
+\subsection{Zajímavá videa na YouTube}
+
+\begin{itemize}
+\item \href{https://youtu.be/yIYKR4sgzI8?si=p8gRQrpNXRz5oCfo}{StatQuest: Logistic Regression (StatQuest with Josh Starmer)} \hfill \textbf{[8~min]}
 \end{itemize}
 
 \section{Ensemble metody (Ensemble Methods)}
@@ -1796,6 +1827,14 @@ $$\hat{Y} = \begin{cases}
 
 \item U ensemble metod chceme, aby jednotlivé modely (zde stromy) nebyly stejné, ale co nejrůznorodější — toho lze docílit pomocí randomizace — u náhodných lesů toho docílíme pomocí náhodné metody bootstrap a pomocí hodnoty \texttt{max\_features} (maximální počet features, se kterými každý strom pracuje).
 
+\item \textbf{Out-Of-Bag (OOB) statistika a limita:} Důsledkem metody Bootstrap (výběr s vracením) je, že část dat se do tréninku konkrétního stromu vůbec nedostane (tzv. OOB data).
+\\
+Pravděpodobnost, že konkrétní vzorek \textit{nebude} vybrán v jednom tahu, je $(1 - \frac{1}{N})$. Protože provádíme $N$ nezávislých tahů, pravděpodobnost, že nebude vybrán vůbec, je:
+$$ P(\text{OOB}) = \left(1 - \frac{1}{N}\right)^N $$
+Pro velmi velký dataset ($N \to \infty$) tato hodnota konverguje k převrácené hodnotě Eulerova čísla:
+$$ \lim_{N \to \infty} \left(1 - \frac{1}{N}\right)^N = \frac{1}{e} \approx 0.368 $$
+Z toho plyne, že každému stromu chybí zhruba \textbf{36,8\,\%} původních dat, která lze využít pro \textit{OOB Error} (validaci modelu zdarma bez nutnosti Cross-Validation).
+
 \end{itemize}
 
 \subsection{Boosting obecně}
@@ -1903,6 +1942,8 @@ $$w_i \leftarrow w_i \exp(\alpha^{(m)}).$$
 \begin{itemize}
 \item \href{https://youtu.be/LsK-xG1cLYA?si=gwOTzUiS3iIAhfdR}{
 AdaBoost, Clearly Explained (StatQuest with Josh Starmer)} \hfill \textbf{[21~min]}
+
+\item \href{https://youtu.be/J4Wdy0Wc_xQ?si=Uk9bos0sQatMLDqt}{StatQuest: Random Forests - Building, Using and Evaluating (StatQuest with Josh Starmer)} \hfill \textbf{[9~min]}
 \end{itemize}
 
 \section{Evaluace modelů: metriky}
@@ -2120,6 +2161,17 @@ $$F_1 = 2 \frac{PPV \cdot TPR}{PPV + TPR} = \frac{2TP}{2TP + FP + FN}$$
 \end{itemize}
 \end{itemize}
 
+\subsection{Zajímavá videa na YouTube}
+
+\begin{itemize}
+
+\item \href{https://youtu.be/4jRBRDbJemM?si=KFIrkHlzfxtaVifB}{ROC and AUC, Clearly Explained!
+ (StatQuest with Josh Starmer)} \hfill \textbf{[16~min]}
+
+\item \href{https://youtu.be/Kdsp6soqA7o?si=9S04bcUbFDnriXJG}{Machine Learning Fundamentals: The Confusion Matrix (StatQuest with Josh Starmer)} \hfill \textbf{[7~min]}
+
+\end{itemize}
+
 \section{Evaluace modelů: testovací chyba a její odhad}
 \label{sec:evaluace_testovaci}
 
@@ -2253,6 +2305,18 @@ $$\mathbb{E}\left[err_{test} \mid \mathcal{D}\right] = Err_\mathcal{D}$$
 $$Err = \mathbb{E}\left[Err_\mathcal{D}\right] = \mathbb{E}\left[L(Y, \hat{Y}(X))\right]$$
 
 \end{itemize}
+
+
+\subsection{Zajímavá videa na YouTube}
+
+\begin{itemize}
+
+\item \href{https://youtu.be/fSytzGwwBVw?si=-WlJx5vn9_aceiOm}{Machine Learning Fundamentals: Cross Validation (StatQuest with Josh Starmer)} \hfill \textbf{[8~min]}
+
+\item \href{https://youtu.be/XXFLFWHP9Nc?si=7IRnlvnDji3LZZ0b}{11.5 Nested CV for Algorithm Selection (L11 Model Eval. Part 4) (Sebastian Raschka)} \hfill \textbf{[17~min]}
+
+\end{itemize}
+
 
 \section{Výběr příznaků (Feature Selection)}
 \label{sec:lasso}
@@ -2444,6 +2508,16 @@ $$\hat{w}^{Lasso}_{\lambda;0} = \hat{w}^{OLS}_0 \quad \text{a} \quad \hat{w}^{La
 
 \item Minimalizuje se:
 $$RSS^{ElasticNet}_{\lambda_1, \lambda_2}(\mathbf{w}) = \|\mathbf{Y} - \mathbf{X}\mathbf{w}\|^2 + \lambda_1 \sum_{i=1}^{p} |w_i| + \lambda_2 \sum_{i=1}^{p} w_i^2$$
+
+\end{itemize}
+
+\subsection{Zajímavá videa na YouTube}
+
+\begin{itemize}
+
+\item \href{https://youtu.be/NGf0voTMlcs?si=FmXSx7uRSdryZojC}{Regularization Part 2: Lasso (L1) Regression (StatQuest with Josh Starmer)} \hfill \textbf{[8~min]}
+
+\item \href{https://youtu.be/1dKRdX9bfIo?si=nNSNtw0JFHOvPmoT}{Regularization Part 3: Elastic Net Regression (StatQuest with Josh Starmer)} \hfill \textbf{[5~min]}
 
 \end{itemize}
 
@@ -2694,7 +2768,6 @@ kde $\bar{\mathbf{x}}_A = \frac{1}{|A|} \sum_{\mathbf{x} \in A} \mathbf{x}$ je g
 \end{itemize}
 \end{itemize}
 
-
 \section{Shlukování pomocí algoritmu k-means}
 \label{sec:kmeans}
 
@@ -2894,6 +2967,14 @@ $$s = \frac{1}{|\mathcal{D}|} \sum_{\mathbf{x} \in \mathcal{D}} s(\mathbf{x})$$
 %
 %
 %
+
+
+\subsection{Zajímavá videa na YouTube}
+\begin{itemize}
+\item \href{https://youtu.be/4b5d3muPQmA?si=V0DAzHJelvt-UeR4}{
+StatQuest: K-means clustering (StatQuest with Josh Starmer)} \hfill \textbf{[8~min]}
+\end{itemize}
+
 \section{Shlukování pomocí algoritmu DBSCAN}
 \label{sec:dbscan}
 
@@ -3165,6 +3246,14 @@ $$s = \frac{1}{|\mathcal{D}|} \sum_{\mathbf{x} \in \mathcal{D}} s(\mathbf{x})$$
 \end{itemize}
 
 
+\subsection{Zajímavá videa na YouTube}
+
+\begin{itemize}
+\item \href{https://youtu.be/RDZUdRSDOok?si=Ds2vrsrBj9b9Drdc}{Clustering with DBSCAN, Clearly Explained!!! (StatQuest with Josh Starmer)} \hfill \textbf{[9~min]}
+
+\end{itemize}
+
+
 \section{Nesupervizované učení, asociační pravidla}
 \label{sec:asociacni_pravidla}
 
@@ -3271,27 +3360,6 @@ což odpovídá odhadu podmíněné pravděpodobnosti $P(A \mid B)$.
 
 \end{itemize}
 
-\subsection{Asociační pravidla: příklady}
-
-\begin{itemize}
-
-\item Klasickým příkladem asociačního pravidla je:
-$$\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}, \texttt{chléb}\}$$
-
-\item {\bf Podpora} 0.06 znamená, že v celém datasetu se trojice položek $\{\texttt{párky}, \texttt{hořčice}, \texttt{chléb}\}$ vyskytuje v 6\% případů.
-
-\item Pokud se párky vyskytují v datasetu v 8\% případů, bude {\bf spolehlivost} $0.06/0.08 = 0.75$, což znamená, že když si zákazník koupil párky, v 75\% případů si koupil také hořčici a chléb.
-
-\item Pokud je dvojice hořčice a chléb v datasetu v 15\% případů, {\bf zdvih} bude $0.75/0.15 = 5$.
-
-\item {\bf Pokrytí} v takovém případě bude $0.06/0.15 = 0.4$. Čili ve 40\% případů lze hořčici a chléb uvažovat jako důsledek koupě párků.
-
-\item {\bf Nevýhoda omezení na podporu:} Pravidla s velkou hodnotou spolehlivosti i zdvihu ale s nízkou podporou, jako např.:
-$$\{\texttt{doutník}\} \Rightarrow \{\texttt{rum}\},$$
-nebudou nalezeny.
-
-\end{itemize}
-
 \subsection{Shrnutí asociačních pravidel}
 
 \begin{itemize}
@@ -3314,11 +3382,127 @@ $$\text{Coverage}(A \Rightarrow B) = \frac{T(A \cup B)}{T(B)} = \hat{P}(A \mid B
 \item $L = 1$: Předpoklad a závěr jsou nezávislé.
 \item $L < 1$: Předpoklad a závěr jsou negativně korelované.
 \end{itemize}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Ukázka výpočtu asociačních pravidel}
+
+\begin{itemize}
+
+\item Mějme následující dataset z obchodu s potravinami, kde každý řádek reprezentuje jeden nákupní košík (transakci):
+
+\begin{table}[h]
+\centering
+\begin{tabular}{c|ccccc}
+\textbf{ID transakce} & \textbf{párky} & \textbf{hořčice} & \textbf{chléb} & \textbf{croissant} & \textbf{káva} \\
+\hline
+1 & 1 & 1 & 1 & 0 & 0 \\
+2 & 1 & 0 & 1 & 0 & 1 \\
+3 & 0 & 0 & 1 & 1 & 1 \\
+4 & 1 & 1 & 1 & 0 & 0 \\
+5 & 0 & 1 & 0 & 1 & 1 \\
+6 & 1 & 1 & 0 & 0 & 1 \\
+7 & 0 & 0 & 1 & 1 & 1 \\
+8 & 1 & 1 & 1 & 0 & 0 \\
+9 & 0 & 1 & 1 & 1 & 0 \\
+10 & 1 & 0 & 1 & 0 & 1 \\
+\end{tabular}
+\caption{Dataset nákupních košíků (1 = položka zakoupena, 0 = položka nezakoupena).}
+\label{tab:shopping_data}
+\end{table}
+
+\item {\bf Krok 1: Výpočet podpory jednotlivých položek}
+
+Nejprve spočítáme, jak často se jednotlivé položky v datech vyskytují (viz tabulka \ref{tab:item_support}):
+
+\begin{table}[h]
+\centering
+\begin{tabular}{c|c|c}
+\textbf{Položka} & \textbf{Počet výskytů} & \textbf{Podpora} $T(\cdot)$ \\
+\hline
+párky & 6 & $6/10 = 0.6$ \\
+hořčice & 6 & $6/10 = 0.6$ \\
+chléb & 8 & $8/10 = 0.8$ \\
+croissant & 4 & $4/10 = 0.4$ \\
+káva & 6 & $6/10 = 0.6$ \\
+\end{tabular}
+\caption{Podpora jednotlivých položek.}
+\label{tab:item_support}
+\end{table}
+
+\item {\bf Krok 2: Výpočet podpory dvojic položek}
+
+Nyní spočítáme podporu vybraných dvojic položek (množin $\mathcal{K}$ o velikosti 2), jak ukazuje tabulka \ref{tab:pair_support}:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{c|c|c}
+\textbf{Dvojice položek} & \textbf{Počet výskytů} & \textbf{Podpora} $T(\cdot)$ \\
+\hline
+\{párky, hořčice\} & 4 & $4/10 = 0.4$ \\
+\{párky, chléb\} & 5 & $5/10 = 0.5$ \\
+\{hořčice, chléb\} & 4 & $4/10 = 0.4$ \\
+\{croissant, káva\} & 3 & $3/10 = 0.3$ \\
+\{chléb, káva\} & 4 & $4/10 = 0.4$ \\
+\end{tabular}
+\caption{Podpora vybraných dvojic položek.}
+\label{tab:pair_support}
+\end{table}
+
+\item {\bf Krok 3: Analýza asociačního pravidla} $\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}$
+
+Uvažujme pravidlo: "Pokud zákazník koupí párky, koupí i hořčici."
+
+\begin{itemize}
+\item {\bf Podpora pravidla:}
+$$T(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}) = T(\{\texttt{párky}, \texttt{hořčice}\}) = \frac{4}{10} = 0.4$$
+
+\item {\bf Spolehlivost (confidence):}
+$$C(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}) = \frac{T(\{\texttt{párky}, \texttt{hořčice}\})}{T(\{\texttt{párky}\})} = \frac{0.4}{0.6} = 0.667$$
+
+{\bf Interpretace:} Pokud zákazník koupí párky, v 66.7\% případů koupí i hořčici.
+
+\item {\bf Zdvih (lift):}
+$$L(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}) = \frac{C(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\})}{T(\{\texttt{hořčice}\})} = \frac{0.667}{0.6} = 1.111$$
+
+{\bf Interpretace:} Zdvih $> 1$ znamená pozitivní korelaci. Zákazníci, kteří kupují párky, kupují hořčici o 11.1\% častěji než průměrný zákazník.
+
+\item {\bf Pokrytí (coverage):}
+$$\text{Coverage}(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}) = \frac{T(\{\texttt{párky}, \texttt{hořčice}\})}{T(\{\texttt{hořčice}\})} = \frac{0.4}{0.6} = 0.667$$
+
+{\bf Interpretace:} Ve 66.7\% případů, kdy zákazník koupil hořčici, lze to vysvětlit tím, že koupil i párky.
+\end{itemize}
+
+\item {\bf Krok 4: Ověření proti prahům}
+
+Předpokládejme, že jsme zvolili minimální prahy:
+\begin{itemize}
+    \item Minimální podpora: $t = 0.3$
+    \item Minimální spolehlivost: $c = 0.6$
+\end{itemize}
+
+Pravidlo $\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}$ {\bf projde do finálního výstupu}, pokud splňuje obě podmínky:
+$$T(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}) > t \quad \text{a} \quad C(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}) > c$$
+
+Ověření:
+\begin{align*}
+T(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}) &= 0.4 > 0.3 \quad \checkmark \\
+C(\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}) &= 0.667 > 0.6 \quad \checkmark
+\end{align*}
+
+{\bf Závěr:} Pravidlo $\{\texttt{párky}\} \Rightarrow \{\texttt{hořčice}\}$ \textbf{je součástí finálního výstupu} asociační analýzy, protože splňuje obě podmínky.
 
 \end{itemize}
-%
-%
-%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Zajímavá videa na YouTube přesahující rámec kurzu}
 
@@ -3337,7 +3521,7 @@ $$\text{Coverage}(A \Rightarrow B) = \frac{T(A \cup B)}{T(B)} = \hat{P}(A \mid B
 
   \item \href{https://youtu.be/KuXjwB4LzSA?si=H4IxvjF6uflpSYzX}{ But what is a convolution? (3Blue1Brown)} \hfill\textbf{[23~min]}
 
-  \item \href{https://youtu.be/KuXjwB4LzSA?si=WRv8qian4WwAombF}{Convolutions $\vert$ Why X+Y in probability is a beautiful mess
+  \item \href{https://youtu.be/IaSGqQa5O-M?si=SVnVv0O9h5_c7pB_}{Convolutions $\vert$ Why X+Y in probability is a beautiful mess
 (3Blue1Brown)} \hfill\textbf{[27~min]}
 
  \item \href{https://youtu.be/d_qvLDhkg00?si=al14EJ-hNa4BdZu5}{A pretty reason why Gaussian + Gaussian = Gaussian (3Blue1Brown)} \hfill\textbf{[13~min]}
@@ -3405,10 +3589,9 @@ Why “probability of 0” does not mean “impossible” $\vert$ Probabilities 
 \item Doporučení: Pro hlubší pochopení problematiky je vhodné se nejprve seznámit s obsahem předchozí sekce o hlubokém učení.
 \item \href{https://youtu.be/LPZh9BOjkQs?si=J4z0VuBw64R6X3tL}{Large Language Models explained briefly (3Blue1Brown)} \hfill \textbf{[8~min]}
 
-\item \href{https://youtu.be/wjZofJX0v4M?si=jsV5Va9NmxVQVb_m}{Transformers, the tech behind LLMs $\vert$ Deep Learning Chapter 5
- (3Blue1Brown)}
+\item \href{https://youtu.be/wjZofJX0v4M?si=jsV5Va9NmxVQVb_m}{Transformers, the tech behind LLMs $\vert$ Deep Learning Chapter 5 (3Blue1Brown)} \hfill \textbf{[27~min]}
 
- \item \href{https://youtu.be/eMlx5fFNoYc?si=JrCksJ0LxjPA8Vub}{Attention in transformers, step-by-step $\vert$ Deep Learning Chapter 6 (3Blue1Brown)} \hfill \textbf{[27~min]}
+ \item \href{https://youtu.be/eMlx5fFNoYc?si=JrCksJ0LxjPA8Vub}{Attention in transformers, step-by-step $\vert$ Deep Learning Chapter 6 (3Blue1Brown)} \hfill \textbf{[26~min]}
 
  \item \href{https://youtu.be/9-Jl0dxWQs8?si=b9DifRBXTYm6CFe0}{How might LLMs store facts $\vert$ Deep Learning Chapter 7
  (3Blue1Brown)} \hfill \textbf{[22~min]}
@@ -3598,7 +3781,7 @@ $$
 \hyperref[sec:proof_PD_lr]{$$\mathbf{v}^T(2\mathbf{X}^T\mathbf{X})\mathbf{v} = 2 \mathbf{v}^T(\mathbf{X}^T\mathbf{X})\mathbf{v}= 2 (\mathbf{X}\mathbf{v})^T(\mathbf{X}\mathbf{v})= 2||\mathbf{X}\mathbf{v}||^2 > 0$$}
 
 Z lineární nezávislosti sloupců $\mathbf{X}$ plyne, že pro $(\forall \mathbf{v} \neq \mathbf{0})(\mathbf{X}\mathbf{v} \neq \mathbf{0})$, a tedy:
-$$2\|\mathbf{X} \mathbf{v}\|^2 > 0 \quad \text{pro} \ \forall \mathbf{v} \neq \mathbf{0}$$
+$$2\|\mathbf{X} \mathbf{v}\|^2 > 0 \quad \text{pro} \ \forall \mathbf{v} \neq \theta$$
 
 Hessova matice je tedy pozitivně definitní, což znamená, že řešení normální rovnice $\hat{\mathbf{w}}$ je bodem ostrého lokálního minima.
 \end{itemize}
@@ -3627,7 +3810,7 @@ nazýváme \textbf{řešením normální rovnice}.
 &= ((\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T)^T(\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T))^{-1}(\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T)^T\mathbf{Y} \\
 &= (\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T)^{-1}\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \\
 &= (\mathbf{V}\boldsymbol{\Sigma}^T\boldsymbol{\Sigma}\mathbf{V}^T)^{-1}\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \quad \text{(využili jsme $\mathbf{U}^T\mathbf{U} = I$)} \\
-&= \mathbf{V}(\boldsymbol{\Sigma}^T\boldsymbol{\Sigma})^{-1}\mathbf{V}^T\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \\
+&= \mathbf{V}(\boldsymbol{\Sigma}^T\boldsymbol{\Sigma})^{-1}\mathbf{V}^T\mathbf{V}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \quad \text{(využili jsme $\mathbf{V}^T = \mathbf{V}^{-1}$)} \\
 &= \mathbf{V}(\boldsymbol{\Sigma}^T\boldsymbol{\Sigma})^{-1}\boldsymbol{\Sigma}^T\mathbf{U}^T\mathbf{Y} \quad \text{(využili jsme $\mathbf{V}^T\mathbf{V} = I$)} \\
 &= \mathbf{V}\boldsymbol{\Sigma}^+\mathbf{U}^T\mathbf{Y}
 \end{align*}}
@@ -3725,9 +3908,8 @@ a odpovídá globálnímu minimu $RSS_\lambda$.
 \begin{itemize}
 \hyperref[sec:bazove_funkce_model]{$$Y = \sum_{j=0}^{M} w_j \varphi_j(\mathbf{x}) + \varepsilon = \boldsymbol{\varphi}(\mathbf{x})^T \mathbf{w} + \varepsilon$$}
 
-Predikce: \hyperref[sec:bazove_funkce_model]{$\hat{Y} = \boldsymbol{\varphi}(\mathbf{x})^T \hat{\mathbf{w}}_\lambda$}
+Predikce: \hyperref[sec:bazove_funkce_model]{$\hat{Y} = \boldsymbol{\varphi}(\mathbf{x})^T \hat{\mathbf{w}}$}
 \end{itemize}
-
 
 
 \subsection{Statistické vlastnosti modelů}
